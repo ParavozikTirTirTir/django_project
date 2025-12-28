@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container py-5">
+  <h2>Записаться в салон</h2>
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+  
+  <form method="post">
+    {% csrf_token %}
+    
+    <!-- Мастер -->
+    <div class="mb-3">
+      <label class="form-label">{{ form.master.label }}</label>
+      {{ form.master }}
+    </div>
+
+    <!-- Услуги (динамически обновляется) -->
+    <div 
+      id="services-container"
+      hx-get="{% url 'bookings:update_services' %}"
+      hx-trigger="change from:#id_master"
+      hx-target="#services-container"
+      hx-indicator="#services-spinner"
+      hx-include="[name='master']"
+    >
+      <div class="text-muted" id="services-spinner">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Ожидается выбор мастера...
+      </div>
+    </div>
+
+    <!-- Время -->
+    <div class="mb-3">
+      <label class="form-label">{{ form.visit_datetime.label }}</label>
+      {{ form.visit_datetime }}
+    </div>
+
+    {% bootstrap_button "Записаться" button_type="submit" button_class="btn btn-success" %}
+  </form>
+</div>
+{% endblock %}

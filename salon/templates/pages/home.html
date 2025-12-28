@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Парикмахерская — Главная{% endblock %}
+
+{% block content %}
+  <div class="text-center mb-5">
+    <h1 class="display-4">✂️ Добро пожаловать в нашу парикмахерскую!</h1>
+    <p class="lead">Профессиональные услуги, комфорт и индивидуальный подход</p>
+    <a href="{% url 'bookings:create' %}" class="btn btn-primary btn-lg">
+      <i class="bi bi-calendar-plus"></i> Записаться онлайн
+    </a>
+  </div>
+
+  <!-- Статистика -->
+  <div class="row text-center mb-5">
+    <div class="col">
+      <h2>{{ stats.total_masters }}</h2>
+      <p>Мастера</p>
+    </div>
+    <div class="col">
+      <h2>{{ stats.total_services }}</h2>
+      <p>Услуги</p>
+    </div>
+    <div class="col">
+      <h2>{{ stats.avg_price|floatformat:0 }} ₽</h2>
+      <p>Средний чек</p>
+    </div>
+  </div>
+
+  <!-- Популярные услуги -->
+  <h2 class="mb-4">Популярные услуги</h2>
+  <div class="row g-3">
+    {% for service in popular_services %}
+      <div class="col-md-6 col-lg-3">
+        <div class="card">
+          <div class="card-body">
+            <h5>{{ service.title }}</h5>
+            <p class="text-success h5">{{ service.price }} ₽</p>
+            <small class="text-muted">{{ service.duration_minutes }} мин</small>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

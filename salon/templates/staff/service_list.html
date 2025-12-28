@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block title %}Услуги — Парикмахерская{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Наши услуги</h1>
+    {% if user.is_staff %}
+      <a href="{% url 'admin:staff_service_add' %}" class="btn btn-outline-primary">
+        <i class="bi bi-plus-lg"></i> Добавить услугу
+      </a>
+    {% endif %}
+  </div>
+
+  {% if services %}
+    <div class="row g-3">
+      {% for service in services %}
+        <div class="col-md-6">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-start">
+                <h5 class="card-title mb-2">{{ service.title }}</h5>
+                <span class="badge bg-success fs-6">{{ service.price }} ₽</span>
+              </div>
+              <p class="text-muted small mb-3">
+                <i class="bi bi-clock me-1"></i>
+                {{ service.duration_minutes }} мин
+              </p>
+              {% if service.description %}
+                <p class="card-text flex-grow-1">{{ service.description|truncatewords:15 }}</p>
+              {% endif %}
+              <div class="mt-auto">
+                <a href="{% url 'staff:service_detail' service.pk %}" 
+                   class="btn btn-outline-primary btn-sm">
+                  Подробнее
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">
+      <i class="bi bi-info-circle me-2"></i>
+      Пока нет доступных услуг.
+    </div>
+  {% endif %}
+{% endblock %}

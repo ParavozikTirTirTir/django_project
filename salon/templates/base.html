@@ -1,0 +1,112 @@
+{% load static %}
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Парикмахерская премиум-класса. Запишитесь онлайн к лучшим мастерам. Стрижки, окрашивание, укладки — всё в одном месте.">
+
+    <!-- Favicon (с fallback) -->
+    <link rel="icon" href="{% static 'img/fav/favicon.ico' %}" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/fav/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/fav/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/fav/favicon-16x16.png' %}">
+    <!-- Если иконок нет — fallback -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✂️</text></svg>">
+
+    <title>{% block title %}Парикмахерская{% endblock %}</title>
+    
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    {% comment %} Можно добавить свои стили ниже {% endcomment %}
+    {# <link rel="stylesheet" href="{% static 'css/custom.css' %}"> #}
+  </head>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <body class="bg-light">
+    <!-- Шапка -->
+    <header class="bg-white shadow-sm">
+      <nav class="navbar navbar-expand-lg navbar-light container">
+        <div class="navbar-brand d-flex align-items-center">
+          <span class="h3 mb-0">✂️</span>
+          <a class="ms-2 h4 text-decoration-none text-dark" href="{% url 'pages:home' %}">Парикмахерская</a>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'pages:home' %}">Главная</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'staff:master_list' %}">Мастера</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'staff:service_list' %}">Услуги</a>
+            </li>
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'bookings:my_bookings' %}">Мои записи</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'bookings:create' %}">Записаться</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                  {{ user.get_short_name|default:user.username }}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="{% url 'admin:index' %}">Админка</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
+                </ul>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Войти</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:signup' %}">Регистрация</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Сообщения Django -->
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Основной контент -->
+    <main class="py-4">
+      <div class="container">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="bg-white border-top py-4">
+      <div class="container text-center text-muted">
+        <p class="mb-0">&copy; {{ now|date:"Y" }} Парикмахерская. Все права защищены.</p>
+        <p class="mb-0">
+          <a href="{% url 'pages:contacts' %}" class="text-muted">Контакты</a> |
+          <a href="{% url 'pages:about' %}" class="text-muted">О нас</a>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Скрипты -->
+    {% bootstrap_javascript %}
+    {# <script src="{% static 'js/custom.js' %}"></script> #}
+  </body>
+</html>

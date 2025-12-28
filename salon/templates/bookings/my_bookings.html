@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% load utils %} 
+
+{% block content %}
+<div class="container py-5">
+  <h2>Мои записи</h2>
+  {% for booking in bookings %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>{{ booking.master }} — {{ booking.visit_datetime|date:"d.m.Y H:i" }}</h5>
+        <p>
+          Услуги: 
+          {% for bs in booking.booking_services.all %}
+            {{ bs.service.title }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </p>
+        <p><strong>Итого:</strong> {{ booking.total_cost }} ₽</p>
+        <p><span class="badge bg-{{ booking.status|status_color }}">{{ booking.get_status_display }}</span></p>
+        {% if booking.status in 'pending,confirmed' %}
+          <a href="{% url 'bookings:cancel' booking.pk %}" class="btn btn-outline-danger btn-sm">
+            Отменить
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <p>У вас пока нет записей.</p>
+  {% endfor %}
+  
+  {% bootstrap_pagination page_obj %}
+</div>
+{% endblock %}

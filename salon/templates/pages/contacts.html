@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Контакты — Парикмахерская{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-6">
+      <h1>Контакты</h1>
+      <ul class="list-unstyled fs-5">
+        <li><i class="bi bi-geo-alt me-2"></i> {{ address }}</li>
+        <li><i class="bi bi-telephone me-2"></i> {{ phone }}</li>
+        <li><i class="bi bi-envelope me-2"></i> {{ email }}</li>
+      </ul>
+      
+      <h4 class="mt-4">Режим работы</h4>
+      <table class="table">
+        <tr><td>Пн–Пт</td><td>{{ work_hours.mon_fri }}</td></tr>
+        <tr><td>Сб</td><td>{{ work_hours.sat }}</td></tr>
+        <tr><td>Вс</td><td>{{ work_hours.sun }}</td></tr>
+      </table>
+    </div>
+    <div class="col-md-6">
+    </div>
+  </div>
+{% endblock %}

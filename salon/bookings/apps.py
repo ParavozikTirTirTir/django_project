@@ -1,0 +1,13 @@
+from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
+
+
+class BookingsConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'bookings'
+    verbose_name = _('Записи клиентов')
+
+    def ready(self):
+        # Импортируем сигналы (если будут добавлены позже)
+        # from . import signals
+        pass
